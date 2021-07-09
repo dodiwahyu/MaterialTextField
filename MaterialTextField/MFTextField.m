@@ -400,7 +400,7 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
         font = self.font;
     }
 
-    return [UIFont fontWithName:font.fontName size:MFDefaultLabelFontSize];
+    return [font fontWithSize:MFDefaultLabelFontSize];
 }
 
 - (void)updateDefaultPlaceholderFont
@@ -426,7 +426,7 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
     }
 
     if (animated && !self.placeholderIsAnimating) {
-        [self.superview layoutIfNeeded];
+        [self.superview setNeedsLayout];
 
         self.placeholderIsAnimating = YES;
         self.placeholderLabelTopConstraint.constant = 0;
@@ -460,7 +460,11 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
     CGFloat finalDistanceFromTop = CGRectGetMinY(self.textRect) / 2.0f;
 
     if (self.placeholderAnimatesOnFocus) {
-        self.attributedPlaceholder = self.placeholderAttributedString;
+        if (self.placeholderAttributedString.length > 0) {
+            self.attributedPlaceholder = self.placeholderAttributedString;
+        } else {
+            self.placeholder = self.placeholderLabel.text;
+        }
     }
 
     if (animated && !self.placeholderIsAnimating) {
@@ -546,7 +550,7 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
     [self updateErrorLabelText];
 
     if (animated && !self.errorIsAnimating) {
-        [self.superview layoutIfNeeded];
+        [self.superview setNeedsLayout];
 
         self.errorIsAnimating = YES;
         self.errorLabelZeroHeightConstraint.active = NO;
